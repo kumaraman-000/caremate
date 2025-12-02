@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CareMate — Hospital Care Giver Booking</title>
+  <meta name="description" content="Reliable, affordable on-demand hospital companionship and support. Book vetted caregivers by hour, shift or day." />
+  <style>
+    /* Reset & base */
+    :root{
+      --accent:#3b82f6; /* blue */
+      --muted:#6b7280;
+      --bg:#f7fafc;
+      --card:#ffffff;
+      --radius:12px;
+      --glass: rgba(255,255,255,0.6);
+      --maxw:1100px;
+      --shadow: 0 8px 24px rgba(15,23,42,0.08);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:linear-gradient(180deg,var(--bg),#fff);color:#0f172a;line-height:1.45}
+    .container{max-width:var(--maxw);margin:0 auto;padding:28px}
+
+    /* Header */
+    header{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#06b6d4);display:grid;place-items:center;color:white;font-weight:700;font-size:20px}
+    .brand h1{margin:0;font-size:18px}
+    nav a{margin-left:18px;text-decoration:none;color:var(--muted);font-weight:600}
+    .cta{background:var(--accent);color:white;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:700}
+
+    /* Hero */
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;margin:28px 0}
+    .hero .lead{background:linear-gradient(180deg, rgba(59,130,246,0.06), rgba(6,182,212,0.02));padding:26px;border-radius:16px;box-shadow:var(--shadow)}
+    .badge{display:inline-block;background:rgba(59,130,246,0.12);color:var(--accent);padding:6px 10px;border-radius:999px;font-weight:700;margin-bottom:12px}
+    h2{margin:0 0 10px;font-size:28px}
+    p.lead-desc{color:var(--muted);margin:0 0 18px}
+    .features{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+    .feature{background:var(--card);padding:12px;border-radius:10px;box-shadow:0 4px 18px rgba(2,6,23,0.04);min-width:150px;font-size:14px}
+
+    /* Booking card */
+    .booking{background:linear-gradient(180deg,#fff,#fbfdff);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+    .booking h3{margin:0 0 6px}
+    .price{font-weight:800;font-size:20px}
+    .booking .row{display:flex;gap:8px;margin-top:12px}
+    .btn{display:inline-block;padding:10px 12px;border-radius:10px;text-decoration:none;font-weight:700;border:none;cursor:pointer}
+    .btn-primary{background:var(--accent);color:white}
+    .btn-ghost{background:transparent;border:1px solid rgba(15,23,42,0.06)}
+
+    /* Caregiver grid */
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px}
+    .card{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.04);}
+    .avatar{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,#e6eefc,#e6fff8);display:flex;align-items:center;justify-content:center;font-weight:700;color:#064e3b}
+    .meta{display:flex;gap:12px;align-items:center}
+    .rating{color:#f59e0b;font-weight:700}
+    .tag{display:inline-block;background:#f1f5f9;padding:6px 8px;border-radius:999px;font-size:12px;color:var(--muted)}
+
+    /* Stats */
+    .stats{display:flex;gap:12px;margin-top:22px}
+    .stat{background:linear-gradient(180deg,#fff,#fbfdff);padding:12px;border-radius:12px;flex:1;text-align:center;box-shadow:var(--shadow)}
+
+    /* Footer */
+    footer{margin-top:40px;padding:24px 0;color:var(--muted);font-size:14px;border-top:1px solid #eef2f7}
+
+    /* Responsive */
+    @media (max-width:1000px){
+      .hero{grid-template-columns:1fr}
+      .grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width:640px){
+      .grid{grid-template-columns:1fr}
+      nav{display:none}
+      .hero{gap:18px}
+    }
+
+    /* Tiny interactions (non-js friendly) */
+    .search{display:flex;gap:8px;margin-top:12px}
+    input[type=text]{flex:1;padding:10px;border-radius:10px;border:1px solid #e6eef7}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo">CM</div>
+        <div>
+          <h1>CareMate</h1>
+          <div style="font-size:12px;color:var(--muted)">Hospital Care Giver Booking</div>
+        </div>
+      </div>
+      <nav aria-label="Main navigation">
+        <a href="#how">How it works</a>
+        <a href="#caregivers">Caregivers</a>
+        <a href="#pricing">Pricing</a>
+        <a class="cta" href="#book">Book Now</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="lead">
+          <span class="badge">On-demand · Verified</span>
+          <h2>Reliable hospital companionship when family can't stay.</h2>
+          <p class="lead-desc">CareMate connects families to trusted, vetted caregivers who stay with a patient, assist with non‑medical needs, and keep you updated — bookable by hour, shift or day.</p>
+
+          <div class="features" aria-hidden="false">
+            <div class="feature">Verified profiles & basic ID checks</div>
+            <div class="feature">Live booking & shift scheduling</div>
+            <div class="feature">In-app chat & updates</div>
+            <div class="feature">Transparent pricing</div>
+            <div class="feature">Ratings & reviews</div>
+          </div>
+
+          <div class="stats" style="margin-top:18px">
+            <div class="stat"><div style="font-weight:800;font-size:18px">4.9★</div><div style="color:var(--muted);font-size:13px">Avg caregiver rating</div></div>
+            <div class="stat"><div style="font-weight:800;font-size:18px">1,200+</div><div style="color:var(--muted);font-size:13px">Bookings last month</div></div>
+            <div class="stat"><div style="font-weight:800;font-size:18px">24/7</div><div style="color:var(--muted);font-size:13px">Support</div></div>
+          </div>
+
+        </div>
+
+        <aside class="booking" id="book" aria-labelledby="booking-heading">
+          <h3 id="booking-heading">Quick book</h3>
+          <div style="color:var(--muted);font-size:13px">Pick duration and see an instant estimate</div>
+          <div style="margin-top:12px">
+            <label style="font-size:13px;color:var(--muted)">Service</label>
+            <div style="margin-top:6px"><span class="tag">Hospital companion</span></div>
+          </div>
+
+          <div class="row" style="margin-top:12px">
+            <div style="flex:1">
+              <label style="font-size:13px;color:var(--muted)">Date</label>
+              <input type="text" placeholder="Select date" aria-label="Select date" style="width:100%;padding:10px;border-radius:10px;border:1px solid #eef2f7;margin-top:6px" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div style="flex:1">
+              <label style="font-size:13px;color:var(--muted)">Duration</label>
+              <select style="width:100%;padding:10px;border-radius:10px;border:1px solid #eef2f7;margin-top:6px">
+                <option>2 hours</option>
+                <option>4 hours</option>
+                <option>8-hour shift</option>
+                <option>Full day</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px">
+            <div>
+              <div style="font-size:12px;color:var(--muted)">Estimate</div>
+              <div class="price">₹350 / hour</div>
+            </div>
+            <div>
+              <a class="btn btn-primary" href="#caregivers">Find caregivers</a>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;font-size:13px;color:var(--muted)">Payments powered by a secure provider (MVP placeholder)</div>
+        </aside>
+      </section>
+
+      <section id="how">
+        <h3 style="margin-bottom:6px">How it works</h3>
+        <p style="color:var(--muted);margin-top:0">Requesters search nearby hospital caregivers, choose a verified profile, book by hour/shift/day, chat in-app and rate after the visit.</p>
+
+        <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap">
+          <div style="flex:1;min-width:220px;background:var(--card);padding:14px;border-radius:12px;box-shadow:var(--shadow)">
+            <strong>1. Search</strong>
+            <div style="color:var(--muted);font-size:13px;margin-top:6px">Find caregivers available near the hospital and filter by language, experience, or rating.</div>
+          </div>
+          <div style="flex:1;min-width:220px;background:var(--card);padding:14px;border-radius:12px;box-shadow:var(--shadow)">
+            <strong>2. Book & schedule</strong>
+            <div style="color:var(--muted);font-size:13px;margin-top:6px">Instant shift booking with start/end times and optional recurring schedules.</div>
+          </div>
+          <div style="flex:1;min-width:220px;background:var(--card);padding:14px;border-radius:12px;box-shadow:var(--shadow)">
+            <strong>3. Stay informed</strong>
+            <div style="color:var(--muted);font-size:13px;margin-top:6px">In-app chat, notes and periodic photo/text updates from the caregiver.</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="caregivers" style="margin-top:26px">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h3 style="margin:0">Verified caregivers</h3>
+          <div style="color:var(--muted);font-size:13px">Showing 12 available • <a href="#">See all</a></div>
+        </div>
+
+        <div class="grid" role="list">
+          <!-- Card 1 -->
+          <article class="card" role="listitem" aria-label="Caregiver: Anjali Sharma">
+            <div class="meta">
+              <div class="avatar">AS</div>
+              <div>
+                <div style="font-weight:800">Anjali Sharma</div>
+                <div style="font-size:13px;color:var(--muted)">5 yrs experience • Hindi, English</div>
+              </div>
+            </div>
+            <div style="margin-top:10px;color:var(--muted);font-size:14px">Companion care, medication reminders, basic mobility assistance.</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+              <div class="rating">4.9★ <span style="color:var(--muted);font-weight:600">(230)</span></div>
+              <div>
+                <a class="btn btn-primary" href="#book">Book</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="card" role="listitem" aria-label="Caregiver: Ravi Patel">
+            <div class="meta">
+              <div class="avatar">RP</div>
+              <div>
+                <div style="font-weight:800">Ravi Patel</div>
+                <div style="font-size:13px;color:var(--muted)">3 yrs experience • English, Gujarati</div>
+              </div>
+            </div>
+            <div style="margin-top:10px;color:var(--muted);font-size:14px">Patient comfort, hospital errands, feeding assistance.</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+              <div class="rating">4.8★ <span style="color:var(--muted);font-weight:600">(180)</span></div>
+              <div>
+                <a class="btn btn-primary" href="#book">Book</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="card" role="listitem" aria-label="Caregiver: Meera Iyer">
+            <div class="meta">
+              <div class="avatar">MI</div>
+              <div>
+                <div style="font-weight:800">Meera Iyer</div>
+                <div style="font-size:13px;color:var(--muted)">7 yrs experience • Kannada, English</div>
+              </div>
+            </div>
+            <div style="margin-top:10px;color:var(--muted);font-size:14px">Companionship, language support, light mobility help.</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+              <div class="rating">4.95★ <span style="color:var(--muted);font-weight:600">(320)</span></div>
+              <div>
+                <a class="btn btn-primary" href="#book">Book</a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <div style="margin-top:18px;text-align:center">
+          <a class="btn btn-ghost" href="#">Load more caregivers</a>
+        </div>
+      </section>
+
+      <section id="pricing" style="margin-top:28px">
+        <h3>Transparent pricing</h3>
+        <p style="color:var(--muted)">Simple hourly or shift based pricing — taxes and small travel fee may apply depending on hospital location.</p>
+
+        <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
+          <div style="flex:1;min-width:180px;background:var(--card);padding:14px;border-radius:12px;box-shadow:var(--shadow)">
+            <strong>Hourly</strong>
+            <div style="font-weight:800;margin-top:6px">₹350 / hour</div>
+            <div style="color:var(--muted);font-size:13px;margin-top:8px">Minimum 2 hours</div>
+          </div>
+          <div style="flex:1;min-width:180px;background:var(--card);padding:14px;border-radius:12px;box-shadow:var(--shadow)">
+            <strong>Shift</strong>
+            <div style="font-weight:800;margin-top:6px">₹2,400 / 8-hour shift</div>
+            <div style="color:var(--muted);font-size:13px;margin-top:8px">Includes short breaks</div>
+          </div>
+          <div style="flex:1;min-width:180px;background:var(--card);padding:14px;border-radius:12px;box-shadow:var(--shadow)">
+            <strong>Full day</strong>
+            <div style="font-weight:800;margin-top:6px">₹4,800 / day</div>
+            <div style="color:var(--muted);font-size:13px;margin-top:8px">Discounted for recurring bookings</div>
+          </div>
+        </div>
+      </section>
+
+      <section style="margin-top:34px;background:linear-gradient(180deg,rgba(9,30,66,0.02),transparent);padding:18px;border-radius:12px">
+        <h3 style="margin:0">Safety & verification</h3>
+        <p style="color:var(--muted);margin-top:8px">Caregivers pass ID verification and a basic background check for MVP. Profiles show languages, experience and verified badges.</p>
+      </section>
+
+    </main>
+
+    <footer>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <div>
+          <strong>CareMate</strong>
+          <div style="color:var(--muted);font-size:13px">Trusted hospital companionship • © 2025 CareMate</div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:center">
+          <a href="#" style="text-decoration:none;color:var(--muted)">Privacy</a>
+          <a href="#" style="text-decoration:none;color:var(--muted)">Terms</a>
+          <a href="#" style="text-decoration:none;color:var(--muted)">Contact</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
