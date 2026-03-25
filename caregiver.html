@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Caregiver Profile — CareMate</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <div class="container">
+    <div id="nav-root"></div>
+
+    <main id="main">
+      <div id="profile-root"></div>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <div><strong>CareMate</strong> · Trusted hospital companionship · © 2026</div>
+        <div style="display:flex;gap:16px"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a></div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Booking modal -->
+  <div class="modal-overlay" id="book-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title">Book a caregiver</h2>
+        <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
+      </div>
+
+      <form id="book-form" onsubmit="handleBooking(event)" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="b-patient">Patient name *</label>
+            <input class="form-control" type="text" id="b-patient" placeholder="Full name of patient">
+            <div class="form-error" id="b-patient-err">Required.</div>
+          </div>
+          <div class="form-group">
+            <label for="b-hospital">Hospital *</label>
+            <input class="form-control" type="text" id="b-hospital" placeholder="Hospital name">
+            <div class="form-error" id="b-hospital-err">Required.</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="b-ward">Ward / Room number</label>
+          <input class="form-control" type="text" id="b-ward" placeholder="e.g. Ward 4B, Room 12">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="b-date">Date *</label>
+            <input class="form-control" type="date" id="b-date">
+            <div class="form-error" id="b-date-err">Please select a date.</div>
+          </div>
+          <div class="form-group">
+            <label for="b-time">Start time *</label>
+            <input class="form-control" type="time" id="b-time" value="09:00">
+            <div class="form-error" id="b-time-err">Please select a start time.</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="b-duration">Duration *</label>
+          <select class="form-control" id="b-duration" onchange="updatePrice()">
+            <option value="2">2 hours</option>
+            <option value="4">4 hours</option>
+            <option value="8" selected>8-hour shift</option>
+            <option value="12">Full day (12 hrs)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="b-notes">Special instructions (optional)</label>
+          <textarea class="form-control" id="b-notes" rows="3" placeholder="Any specific needs, languages, instructions for the caregiver…" style="resize:vertical"></textarea>
+        </div>
+
+        <!-- Live price estimate -->
+        <div class="price-box" id="price-box">
+          <div class="row"><span>Caregiver rate</span><span id="pe-rate"></span></div>
+          <div class="row"><span>Duration</span><span id="pe-duration"></span></div>
+          <div class="row"><span>Subtotal</span><span id="pe-subtotal"></span></div>
+          <div class="row"><span>Platform fee (5%)</span><span id="pe-fee"></span></div>
+          <div class="row total"><span>Total</span><span id="pe-total" style="color:var(--accent)"></span></div>
+        </div>
+
+        <button class="btn btn-primary btn-lg" type="submit" id="confirm-btn">Confirm booking</button>
+        <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:10px">
+          Secure payment powered by Razorpay (demo — no charge)
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    Nav.render('#nav-root', '');
+
+    const params  = new URLSearchParams(location.search);
+    const cgId    = params.get('id');
+    const cg      = Caregivers.get(cgId);
+    const reviews = SAMPLE_REVIEWS[cgId] || [];
+
+    if (!cg) {
+      document.getElementById('profile-root').innerHTML =
+        '<div class="empty"><div class="icon">😕</div><h3>Caregiver not found</h3><a class="btn btn-primary" style="margin-top:12px" href="caregivers.html">Browse caregivers</a></div>';
+    } else {
+      document.title = cg.name + ' — CareMate';
+      renderProfile();
+      // Set min date to today
+      document.getElementById('b-date').min = new Date().toISOString().split('T')[0];
+      document.getElementById('b-date').value = new Date().toISOString().split('T')[0];
+      updatePrice();
+    }
+
+    function renderProfile() {
+      const stars = (r) => `<span style="color:#f59e0b;font-size:16px">${'★'.repeat(Math.round(r))}</span><span style="color:#d1d5db;font-size:16px">${'☆'.repeat(5 - Math.round(r))}</span>`;
+      document.getElementById('profile-root').innerHTML = `
+        <!-- Back link -->
+        <a href="caregivers.html" style="display:inline-flex;align-items:center;gap:6px;color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;margin-bottom:16px">
+          ← Back to caregivers
+        </a>
+
+        <!-- Hero -->
+        <div class="profile-hero">
+          <div class="profile-meta">
+            <div class="avatar avatar-lg" style="background:${cg.avatarBg};color:${cg.avatarColor}">${cg.initials}</div>
+            <div class="profile-info" style="flex:1">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <div class="pname">${cg.name}</div>
+                <span class="tag tag-accent">✓ Verified</span>
+                <span class="avail ${cg.available ? 'yes' : 'no'}">${cg.available ? 'Available' : 'Unavailable'}</span>
+              </div>
+              <div class="psub">${cg.experience} years experience · ${cg.location}</div>
+              <div class="profile-stats">
+                <div class="profile-stat"><div class="val">${stars(cg.rating)}</div><div class="lbl">${cg.rating} avg (${cg.reviews} reviews)</div></div>
+                <div class="profile-stat"><div class="val">${cg.experience}yr</div><div class="lbl">Experience</div></div>
+                <div class="profile-stat"><div class="val">${Utils.currency(cg.ratePerHour)}</div><div class="lbl">per hour</div></div>
+              </div>
+            </div>
+            <div>
+              <button class="btn btn-primary" onclick="openModal()" style="min-width:130px">Book Now</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two-column layout -->
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:20px;align-items:start">
+          <div>
+            <!-- About -->
+            <div class="card" style="margin-bottom:16px">
+              <h2 style="font-size:16px;font-weight:800;margin-bottom:10px">About</h2>
+              <p style="color:#374151;font-size:14px;line-height:1.65">${cg.bio}</p>
+            </div>
+
+            <!-- Reviews -->
+            <div>
+              <h2 style="font-size:16px;font-weight:800;margin-bottom:12px">Reviews (${reviews.length})</h2>
+              ${reviews.length
+                ? reviews.map(r => `
+                    <div class="review-card">
+                      <div class="review-header">
+                        <span class="reviewer">${r.name}</span>
+                        <span class="review-date">${r.date}</span>
+                      </div>
+                      <div style="color:#f59e0b;margin:4px 0;font-size:15px">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+                      <p class="review-text">${r.comment}</p>
+                    </div>`).join('')
+                : '<div class="empty"><p>No reviews yet.</p></div>'
+              }
+            </div>
+          </div>
+
+          <!-- Sidebar -->
+          <div>
+            <div class="card" style="margin-bottom:14px">
+              <h3 style="font-size:14px;font-weight:700;margin-bottom:12px">Specialities</h3>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                ${cg.skills.map(s => `<span class="tag">${s}</span>`).join('')}
+              </div>
+            </div>
+            <div class="card" style="margin-bottom:14px">
+              <h3 style="font-size:14px;font-weight:700;margin-bottom:12px">Languages</h3>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                ${cg.languages.map(l => `<span class="tag tag-accent">${l}</span>`).join('')}
+              </div>
+            </div>
+            <div class="card">
+              <h3 style="font-size:14px;font-weight:700;margin-bottom:10px">Pricing</h3>
+              <div style="font-size:13px;line-height:1.9;color:#374151">
+                <div style="display:flex;justify-content:space-between"><span>Hourly</span><strong>${Utils.currency(cg.ratePerHour)}/hr</strong></div>
+                <div style="display:flex;justify-content:space-between"><span>4-hour block</span><strong>${Utils.currency(cg.ratePerHour * 4)}</strong></div>
+                <div style="display:flex;justify-content:space-between"><span>8-hour shift</span><strong>${Utils.currency(cg.ratePerHour * 8)}</strong></div>
+                <div style="display:flex;justify-content:space-between"><span>Full day (12hr)</span><strong>${Utils.currency(cg.ratePerHour * 12)}</strong></div>
+              </div>
+              <button class="btn btn-primary" onclick="openModal()" style="width:100%;margin-top:14px">Book Now</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* ── Modal ── */
+    function openModal() {
+      const user = Auth.currentUser();
+      if (!user) {
+        window.location.href = `auth.html?next=${encodeURIComponent(location.href)}`;
+        return;
+      }
+      document.getElementById('book-modal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('book-modal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    // Close on backdrop click
+    document.getElementById('book-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+
+    function updatePrice() {
+      const dur  = parseInt(document.getElementById('b-duration').value, 10);
+      const p    = Pricing.estimate(cg.ratePerHour, dur);
+      document.getElementById('pe-rate').textContent     = Utils.currency(cg.ratePerHour) + '/hr';
+      document.getElementById('pe-duration').textContent = Pricing.durationLabel[dur] || dur + ' hrs';
+      document.getElementById('pe-subtotal').textContent = Utils.currency(p.subtotal);
+      document.getElementById('pe-fee').textContent      = Utils.currency(p.fee);
+      document.getElementById('pe-total').textContent    = Utils.currency(p.total);
+    }
+
+    function setErr(id, msg) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.textContent = msg;
+      el.classList.toggle('show', !!msg);
+    }
+
+    function handleBooking(e) {
+      e.preventDefault();
+      const patient  = document.getElementById('b-patient').value.trim();
+      const hospital = document.getElementById('b-hospital').value.trim();
+      const date     = document.getElementById('b-date').value;
+      const time     = document.getElementById('b-time').value;
+      const duration = parseInt(document.getElementById('b-duration').value, 10);
+      const ward     = document.getElementById('b-ward').value.trim();
+      const notes    = document.getElementById('b-notes').value.trim();
+      let ok = true;
+
+      if (!patient)  { setErr('b-patient-err',  'Required.'); ok = false; } else setErr('b-patient-err', '');
+      if (!hospital) { setErr('b-hospital-err', 'Required.'); ok = false; } else setErr('b-hospital-err', '');
+      if (!date)     { setErr('b-date-err',     'Please select a date.'); ok = false; } else setErr('b-date-err', '');
+      if (!time)     { setErr('b-time-err',     'Please select a start time.'); ok = false; } else setErr('b-time-err', '');
+      if (!ok) return;
+
+      const user  = Auth.currentUser();
+      const price = Pricing.estimate(cg.ratePerHour, duration);
+      const btn   = document.getElementById('confirm-btn');
+      btn.innerHTML = '<span class="spinner"></span> Confirming…'; btn.disabled = true;
+
+      setTimeout(() => {
+        Bookings.create({
+          userId: user.email, caregiverId: cg.id, caregiverName: cg.name,
+          patientName: patient, hospital, ward, date, startTime: time,
+          durationHours: duration, totalPrice: price.total, notes,
+        });
+        closeModal();
+        Toast.show('Booking confirmed! Check your dashboard.', 'success');
+        setTimeout(() => window.location.href = 'dashboard.html', 1200);
+      }, 1000);
+    }
+  </script>
+</body>
+</html>

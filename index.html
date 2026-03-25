@@ -3,290 +3,260 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CareMate — Hospital Care Giver Booking</title>
+  <title>CareMate — Hospital Caregiver Booking</title>
   <meta name="description" content="Reliable, affordable on-demand hospital companionship and support. Book vetted caregivers by hour, shift or day." />
+  <meta name="theme-color" content="#3b82f6" />
+  <link rel="stylesheet" href="style.css">
   <style>
-    /* Reset & base */
-    :root{
-      --accent:#3b82f6; /* blue */
-      --muted:#6b7280;
-      --bg:#f7fafc;
-      --card:#ffffff;
-      --radius:12px;
-      --glass: rgba(255,255,255,0.6);
-      --maxw:1100px;
-      --shadow: 0 8px 24px rgba(15,23,42,0.08);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0;background:linear-gradient(180deg,var(--bg),#fff);color:#0f172a;line-height:1.45}
-    .container{max-width:var(--maxw);margin:0 auto;padding:28px}
-
-    /* Header */
-    header{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
-    .brand{display:flex;gap:12px;align-items:center}
-    .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#06b6d4);display:grid;place-items:center;color:white;font-weight:700;font-size:20px}
-    .brand h1{margin:0;font-size:18px}
-    nav a{margin-left:18px;text-decoration:none;color:var(--muted);font-weight:600}
-    .cta{background:var(--accent);color:white;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:700}
-
-    /* Hero */
-    .hero{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;margin:28px 0}
-    .hero .lead{background:linear-gradient(180deg, rgba(59,130,246,0.06), rgba(6,182,212,0.02));padding:26px;border-radius:16px;box-shadow:var(--shadow)}
-    .badge{display:inline-block;background:rgba(59,130,246,0.12);color:var(--accent);padding:6px 10px;border-radius:999px;font-weight:700;margin-bottom:12px}
-    h2{margin:0 0 10px;font-size:28px}
-    p.lead-desc{color:var(--muted);margin:0 0 18px}
-    .features{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
-    .feature{background:var(--card);padding:12px;border-radius:10px;box-shadow:0 4px 18px rgba(2,6,23,0.04);min-width:150px;font-size:14px}
-
-    /* Booking card */
-    .booking{background:linear-gradient(180deg,#fff,#fbfdff);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
-    .booking h3{margin:0 0 6px}
-    .price{font-weight:800;font-size:20px}
-    .booking .row{display:flex;gap:8px;margin-top:12px}
-    .btn{display:inline-block;padding:10px 12px;border-radius:10px;text-decoration:none;font-weight:700;border:none;cursor:pointer}
-    .btn-primary{background:var(--accent);color:white}
-    .btn-ghost{background:transparent;border:1px solid rgba(15,23,42,0.06)}
-
-    /* Caregiver grid */
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px}
-    .card{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.04);}
-    .avatar{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,#e6eefc,#e6fff8);display:flex;align-items:center;justify-content:center;font-weight:700;color:#064e3b}
-    .meta{display:flex;gap:12px;align-items:center}
-    .rating{color:#f59e0b;font-weight:700}
-    .tag{display:inline-block;background:#f1f5f9;padding:6px 8px;border-radius:999px;font-size:12px;color:var(--muted)}
-
-    /* Stats */
-    .stats{display:flex;gap:12px;margin-top:22px}
-    .stat{background:linear-gradient(180deg,#fff,#fbfdff);padding:12px;border-radius:12px;flex:1;text-align:center;box-shadow:var(--shadow)}
-
-    /* Footer */
-    footer{margin-top:40px;padding:24px 0;color:var(--muted);font-size:14px;border-top:1px solid #eef2f7}
-
-    /* Responsive */
-    @media (max-width:1000px){
-      .hero{grid-template-columns:1fr}
-      .grid{grid-template-columns:repeat(2,1fr)}
-    }
-    @media (max-width:640px){
-      .grid{grid-template-columns:1fr}
-      nav{display:none}
-      .hero{gap:18px}
-    }
-
-    /* Tiny interactions (non-js friendly) */
-    .search{display:flex;gap:8px;margin-top:12px}
-    input[type=text]{flex:1;padding:10px;border-radius:10px;border:1px solid #e6eef7}
+    /* Landing-page-only styles */
+    body { background: linear-gradient(180deg, #f7fafc, #fff); }
+    .hero { display: grid; grid-template-columns: 1fr 400px; gap: 28px; align-items: start; margin: 28px 0; }
+    .lead { background: linear-gradient(180deg, rgba(59,130,246,.06), rgba(6,182,212,.02)); padding: 26px; border-radius: 16px; box-shadow: var(--shadow); }
+    .badge { display: inline-block; background: rgba(59,130,246,.12); color: var(--accent); padding: 6px 10px; border-radius: 999px; font-weight: 700; margin-bottom: 12px; font-size: 13px; }
+    h2.hero-h { margin: 0 0 10px; font-size: 28px; font-weight: 800; line-height: 1.3; }
+    p.lead-desc { color: var(--muted); margin: 0 0 18px; font-size: 15px; }
+    .features { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+    .feature { background: var(--card); padding: 10px 12px; border-radius: 10px; box-shadow: 0 4px 18px rgba(2,6,23,.04); font-size: 13px; font-weight: 600; }
+    .stats { display: flex; gap: 12px; margin-top: 18px; }
+    .stat { background: linear-gradient(180deg,#fff,#fbfdff); padding: 12px; border-radius: 12px; flex: 1; text-align: center; box-shadow: var(--shadow); }
+    /* Booking widget */
+    .booking-widget { background: #fff; border-radius: 16px; padding: 20px; box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
+    .booking-widget h3 { margin: 0 0 4px; font-size: 17px; }
+    .bw-row { margin-top: 12px; }
+    .bw-row label { font-size: 12px; color: var(--muted); font-weight: 600; display: block; margin-bottom: 5px; }
+    .bw-row input, .bw-row select { width: 100%; padding: 9px 11px; border-radius: 10px; border: 1.5px solid var(--border); font-size: 14px; font-family: inherit; background: #fff; color: #0f172a; outline: none; transition: border-color .15s; }
+    .bw-row input:focus, .bw-row select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,.12); }
+    .bw-row select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 11px center; padding-right: 30px; }
+    .estimate-line { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
+    /* CG grid on landing */
+    .cg-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-top: 16px; }
+    .cg-card-sm { background: var(--card); padding: 16px; border-radius: 12px; box-shadow: 0 6px 18px rgba(2,6,23,.04); transition: box-shadow .18s, transform .18s; }
+    .cg-card-sm:hover { box-shadow: 0 12px 32px rgba(15,23,42,.10); transform: translateY(-2px); }
+    .cg-avatar { width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #064e3b; }
+    .cg-meta-row { display: flex; gap: 12px; align-items: center; }
+    @media (max-width: 1000px) { .hero { grid-template-columns: 1fr; } .cg-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 640px)  { .cg-grid { grid-template-columns: 1fr; } .stats { flex-wrap: wrap; } }
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
   <div class="container">
-    <header>
-      <div class="brand">
-        <div class="logo">CM</div>
-        <div>
-          <h1>CareMate</h1>
-          <div style="font-size:12px;color:var(--muted)">Hospital Care Giver Booking</div>
-        </div>
-      </div>
-      <nav aria-label="Main navigation">
-        <a href="#how">How it works</a>
-        <a href="#caregivers">Caregivers</a>
-        <a href="#pricing">Pricing</a>
-        <a class="cta" href="#book">Book Now</a>
-      </nav>
-    </header>
+    <div id="nav-root"></div>
 
-    <main>
+    <main id="main-content">
+      <!-- ── Hero ── -->
       <section class="hero">
         <div class="lead">
           <span class="badge">On-demand · Verified</span>
-          <h2>Reliable hospital companionship when family can't stay.</h2>
+          <h2 class="hero-h">Reliable hospital companionship when family can't stay.</h2>
           <p class="lead-desc">CareMate connects families to trusted, vetted caregivers who stay with a patient, assist with non‑medical needs, and keep you updated — bookable by hour, shift or day.</p>
 
-          <div class="features" aria-hidden="false">
-            <div class="feature">Verified profiles & basic ID checks</div>
-            <div class="feature">Live booking & shift scheduling</div>
-            <div class="feature">In-app chat & updates</div>
-            <div class="feature">Transparent pricing</div>
-            <div class="feature">Ratings & reviews</div>
+          <div class="features">
+            <div class="feature">✓ Verified profiles & ID checks</div>
+            <div class="feature">✓ Live booking & scheduling</div>
+            <div class="feature">✓ In-app chat & updates</div>
+            <div class="feature">✓ Transparent pricing</div>
+            <div class="feature">✓ Ratings & reviews</div>
           </div>
 
-          <div class="stats" style="margin-top:18px">
-            <div class="stat"><div style="font-weight:800;font-size:18px">4.9★</div><div style="color:var(--muted);font-size:13px">Avg caregiver rating</div></div>
-            <div class="stat"><div style="font-weight:800;font-size:18px">1,200+</div><div style="color:var(--muted);font-size:13px">Bookings last month</div></div>
-            <div class="stat"><div style="font-weight:800;font-size:18px">24/7</div><div style="color:var(--muted);font-size:13px">Support</div></div>
+          <div class="stats">
+            <div class="stat"><div style="font-weight:800;font-size:18px">4.9★</div><div style="color:var(--muted);font-size:12px">Avg rating</div></div>
+            <div class="stat"><div style="font-weight:800;font-size:18px">1,200+</div><div style="color:var(--muted);font-size:12px">Bookings/month</div></div>
+            <div class="stat"><div style="font-weight:800;font-size:18px">24/7</div><div style="color:var(--muted);font-size:12px">Support</div></div>
           </div>
-
         </div>
 
-        <aside class="booking" id="book" aria-labelledby="booking-heading">
-          <h3 id="booking-heading">Quick book</h3>
-          <div style="color:var(--muted);font-size:13px">Pick duration and see an instant estimate</div>
-          <div style="margin-top:12px">
-            <label style="font-size:13px;color:var(--muted)">Service</label>
-            <div style="margin-top:6px"><span class="tag">Hospital companion</span></div>
+        <!-- Quick-book widget -->
+        <aside class="booking-widget" id="book" aria-labelledby="bw-heading">
+          <h3 id="bw-heading">Quick estimate</h3>
+          <div style="color:var(--muted);font-size:13px">Pick duration to see an instant price</div>
+
+          <div class="bw-row">
+            <label>Service</label>
+            <div style="margin-top:2px"><span class="tag">Hospital companion</span></div>
           </div>
 
-          <div class="row" style="margin-top:12px">
-            <div style="flex:1">
-              <label style="font-size:13px;color:var(--muted)">Date</label>
-              <input type="text" placeholder="Select date" aria-label="Select date" style="width:100%;padding:10px;border-radius:10px;border:1px solid #eef2f7;margin-top:6px" />
-            </div>
+          <div class="bw-row">
+            <label for="bw-date">Date</label>
+            <input type="date" id="bw-date" />
           </div>
 
-          <div class="row">
-            <div style="flex:1">
-              <label style="font-size:13px;color:var(--muted)">Duration</label>
-              <select style="width:100%;padding:10px;border-radius:10px;border:1px solid #eef2f7;margin-top:6px">
-                <option>2 hours</option>
-                <option>4 hours</option>
-                <option>8-hour shift</option>
-                <option>Full day</option>
-              </select>
-            </div>
+          <div class="bw-row">
+            <label for="bw-duration">Duration</label>
+            <select id="bw-duration" onchange="updateEstimate()">
+              <option value="2">2 hours</option>
+              <option value="4">4 hours</option>
+              <option value="8" selected>8-hour shift</option>
+              <option value="12">Full day (12 hrs)</option>
+            </select>
           </div>
 
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px">
+          <div class="estimate-line">
             <div>
-              <div style="font-size:12px;color:var(--muted)">Estimate</div>
-              <div class="price">₹350 / hour</div>
+              <div style="font-size:12px;color:var(--muted)">Estimated total</div>
+              <div style="font-weight:800;font-size:22px;color:var(--accent)" id="bw-price">₹2,800</div>
+              <div style="font-size:11px;color:var(--muted)" id="bw-note">Based on avg ₹350/hr · 8 hrs</div>
             </div>
-            <div>
-              <a class="btn btn-primary" href="#caregivers">Find caregivers</a>
-            </div>
+            <a class="btn btn-primary" href="caregivers.html" id="bw-cta">Find caregivers</a>
           </div>
 
-          <div style="margin-top:12px;font-size:13px;color:var(--muted)">Payments powered by a secure provider (MVP placeholder)</div>
+          <p style="margin-top:12px;font-size:12px;color:var(--muted)">Payments powered by Razorpay (demo)</p>
         </aside>
       </section>
 
-      <section id="how">
-        <h3 style="margin-bottom:6px">How it works</h3>
-        <p style="color:var(--muted);margin-top:0">Requesters search nearby hospital caregivers, choose a verified profile, book by hour/shift/day, chat in-app and rate after the visit.</p>
+      <!-- ── How it works ── -->
+      <section id="how" style="margin-top:8px">
+        <h3 style="margin-bottom:6px;font-size:20px;font-weight:800">How it works</h3>
+        <p style="color:var(--muted);margin-top:0;font-size:14px">Search caregivers near your hospital, choose a verified profile, book by hour/shift/day, chat in-app, and rate after the visit.</p>
 
         <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap">
           <div style="flex:1;min-width:220px;background:var(--card);padding:14px;border-radius:12px;box-shadow:var(--shadow)">
+            <div style="font-size:24px;margin-bottom:8px">🔍</div>
             <strong>1. Search</strong>
-            <div style="color:var(--muted);font-size:13px;margin-top:6px">Find caregivers available near the hospital and filter by language, experience, or rating.</div>
+            <div style="color:var(--muted);font-size:13px;margin-top:6px">Filter by language, experience, rating and availability near the hospital.</div>
           </div>
           <div style="flex:1;min-width:220px;background:var(--card);padding:14px;border-radius:12px;box-shadow:var(--shadow)">
+            <div style="font-size:24px;margin-bottom:8px">📅</div>
             <strong>2. Book & schedule</strong>
-            <div style="color:var(--muted);font-size:13px;margin-top:6px">Instant shift booking with start/end times and optional recurring schedules.</div>
+            <div style="color:var(--muted);font-size:13px;margin-top:6px">Instant booking with date, start time and duration. Transparent pricing shown upfront.</div>
           </div>
           <div style="flex:1;min-width:220px;background:var(--card);padding:14px;border-radius:12px;box-shadow:var(--shadow)">
+            <div style="font-size:24px;margin-bottom:8px">💬</div>
             <strong>3. Stay informed</strong>
-            <div style="color:var(--muted);font-size:13px;margin-top:6px">In-app chat, notes and periodic photo/text updates from the caregiver.</div>
+            <div style="color:var(--muted);font-size:13px;margin-top:6px">In-app chat and updates from the caregiver. Rate them after the visit.</div>
           </div>
         </div>
       </section>
 
-      <section id="caregivers" style="margin-top:26px">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <h3 style="margin:0">Verified caregivers</h3>
-          <div style="color:var(--muted);font-size:13px">Showing 12 available • <a href="#">See all</a></div>
+      <!-- ── Caregivers section ── -->
+      <section id="caregivers" style="margin-top:32px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <h3 style="margin:0;font-size:20px;font-weight:800">Verified caregivers</h3>
+          <a href="caregivers.html" style="color:var(--accent);font-size:13px;font-weight:700;text-decoration:none">See all →</a>
         </div>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:0">Showing 6 top-rated caregivers</p>
 
-        <div class="grid" role="list">
-          <!-- Card 1 -->
-          <article class="card" role="listitem" aria-label="Caregiver: Anjali Sharma">
-            <div class="meta">
-              <div class="avatar">AS</div>
-              <div>
-                <div style="font-weight:800">Anjali Sharma</div>
-                <div style="font-size:13px;color:var(--muted)">5 yrs experience • Hindi, English</div>
-              </div>
+        <div class="cg-grid" role="list">
+          <article class="cg-card-sm" role="listitem">
+            <div class="cg-meta-row">
+              <div class="cg-avatar" style="background:linear-gradient(135deg,#e6eefc,#e6fff8)">AS</div>
+              <div><div style="font-weight:800">Anjali Sharma</div><div style="font-size:12px;color:var(--muted)">5 yrs · Hindi, English</div></div>
             </div>
-            <div style="margin-top:10px;color:var(--muted);font-size:14px">Companion care, medication reminders, basic mobility assistance.</div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+            <div style="margin-top:8px;color:var(--muted);font-size:13px">Companion care, medication reminders, mobility assistance.</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
               <div class="rating">4.9★ <span style="color:var(--muted);font-weight:600">(230)</span></div>
-              <div>
-                <a class="btn btn-primary" href="#book">Book</a>
-              </div>
+              <a class="btn btn-primary btn-sm" href="caregiver.html?id=cg1">Book</a>
             </div>
           </article>
 
-          <!-- Card 2 -->
-          <article class="card" role="listitem" aria-label="Caregiver: Ravi Patel">
-            <div class="meta">
-              <div class="avatar">RP</div>
-              <div>
-                <div style="font-weight:800">Ravi Patel</div>
-                <div style="font-size:13px;color:var(--muted)">3 yrs experience • English, Gujarati</div>
-              </div>
+          <article class="cg-card-sm" role="listitem">
+            <div class="cg-meta-row">
+              <div class="cg-avatar" style="background:linear-gradient(135deg,#fce7f3,#e0f2fe);color:#1e3a5f">RP</div>
+              <div><div style="font-weight:800">Ravi Patel</div><div style="font-size:12px;color:var(--muted)">3 yrs · English, Gujarati</div></div>
             </div>
-            <div style="margin-top:10px;color:var(--muted);font-size:14px">Patient comfort, hospital errands, feeding assistance.</div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+            <div style="margin-top:8px;color:var(--muted);font-size:13px">Patient comfort, hospital errands, feeding assistance.</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
               <div class="rating">4.8★ <span style="color:var(--muted);font-weight:600">(180)</span></div>
-              <div>
-                <a class="btn btn-primary" href="#book">Book</a>
-              </div>
+              <a class="btn btn-primary btn-sm" href="caregiver.html?id=cg2">Book</a>
             </div>
           </article>
 
-          <!-- Card 3 -->
-          <article class="card" role="listitem" aria-label="Caregiver: Meera Iyer">
-            <div class="meta">
-              <div class="avatar">MI</div>
-              <div>
-                <div style="font-weight:800">Meera Iyer</div>
-                <div style="font-size:13px;color:var(--muted)">7 yrs experience • Kannada, English</div>
-              </div>
+          <article class="cg-card-sm" role="listitem">
+            <div class="cg-meta-row">
+              <div class="cg-avatar" style="background:linear-gradient(135deg,#e6eefc,#e6fff8)">MI</div>
+              <div><div style="font-weight:800">Meera Iyer</div><div style="font-size:12px;color:var(--muted)">7 yrs · Kannada, English</div></div>
             </div>
-            <div style="margin-top:10px;color:var(--muted);font-size:14px">Companionship, language support, light mobility help.</div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+            <div style="margin-top:8px;color:var(--muted);font-size:13px">Companionship, language support, mobility help.</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
               <div class="rating">4.95★ <span style="color:var(--muted);font-weight:600">(320)</span></div>
-              <div>
-                <a class="btn btn-primary" href="#book">Book</a>
-              </div>
+              <a class="btn btn-primary btn-sm" href="caregiver.html?id=cg3">Book</a>
             </div>
           </article>
 
+          <article class="cg-card-sm" role="listitem">
+            <div class="cg-meta-row">
+              <div class="cg-avatar" style="background:linear-gradient(135deg,#fce7f3,#ede9fe);color:#4c1d95">SR</div>
+              <div><div style="font-weight:800">Sunita Reddy</div><div style="font-size:12px;color:var(--muted)">4 yrs · Telugu, Hindi</div></div>
+            </div>
+            <div style="margin-top:8px;color:var(--muted);font-size:13px">Post-surgery support, meal assistance, emotional support.</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+              <div class="rating">4.85★ <span style="color:var(--muted);font-weight:600">(145)</span></div>
+              <a class="btn btn-primary btn-sm" href="caregiver.html?id=cg4">Book</a>
+            </div>
+          </article>
+
+          <article class="cg-card-sm" role="listitem">
+            <div class="cg-meta-row">
+              <div class="cg-avatar" style="background:linear-gradient(135deg,#d1fae5,#e0f2fe);color:#1e3a5f">DN</div>
+              <div><div style="font-weight:800">Deepak Nair</div><div style="font-size:12px;color:var(--muted)">6 yrs · Malayalam, English</div></div>
+            </div>
+            <div style="margin-top:8px;color:var(--muted);font-size:13px">Elderly care, wheelchair assistance, pharmacy runs.</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+              <div class="rating">4.9★ <span style="color:var(--muted);font-weight:600">(210)</span></div>
+              <a class="btn btn-primary btn-sm" href="caregiver.html?id=cg5">Book</a>
+            </div>
+          </article>
+
+          <article class="cg-card-sm" role="listitem">
+            <div class="cg-meta-row">
+              <div class="cg-avatar" style="background:linear-gradient(135deg,#fef3c7,#fce7f3);color:#78350f">PS</div>
+              <div><div style="font-weight:800">Priya Singh</div><div style="font-size:12px;color:var(--muted)">2 yrs · Hindi, Punjabi</div></div>
+            </div>
+            <div style="margin-top:8px;color:var(--muted);font-size:13px">Night-shift monitoring, vital log tracking, family updates.</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+              <div class="rating">4.75★ <span style="color:var(--muted);font-weight:600">(92)</span></div>
+              <a class="btn btn-primary btn-sm" href="caregiver.html?id=cg6">Book</a>
+            </div>
+          </article>
         </div>
 
-        <div style="margin-top:18px;text-align:center">
-          <a class="btn btn-ghost" href="#">Load more caregivers</a>
+        <div style="text-align:center;margin-top:18px">
+          <a class="btn btn-ghost" href="caregivers.html">Browse all caregivers →</a>
         </div>
       </section>
 
-      <section id="pricing" style="margin-top:28px">
-        <h3>Transparent pricing</h3>
-        <p style="color:var(--muted)">Simple hourly or shift based pricing — taxes and small travel fee may apply depending on hospital location.</p>
+      <!-- ── Pricing ── -->
+      <section id="pricing" style="margin-top:32px">
+        <h3 style="font-size:20px;font-weight:800;margin-bottom:6px">Transparent pricing</h3>
+        <p style="color:var(--muted);font-size:14px">Simple hourly or shift-based rates — a 5% platform fee applies. No hidden charges.</p>
 
-        <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
-          <div style="flex:1;min-width:180px;background:var(--card);padding:14px;border-radius:12px;box-shadow:var(--shadow)">
+        <div style="display:flex;gap:12px;margin-top:14px;flex-wrap:wrap">
+          <div style="flex:1;min-width:170px;background:var(--card);padding:16px;border-radius:12px;box-shadow:var(--shadow)">
+            <div style="font-size:20px;margin-bottom:6px">⏱</div>
             <strong>Hourly</strong>
-            <div style="font-weight:800;margin-top:6px">₹350 / hour</div>
-            <div style="color:var(--muted);font-size:13px;margin-top:8px">Minimum 2 hours</div>
+            <div style="font-weight:800;font-size:18px;margin-top:6px">₹250–₹450<span style="font-size:12px;font-weight:500;color:var(--muted)">/hr</span></div>
+            <div style="color:var(--muted);font-size:13px;margin-top:6px">Minimum 2 hours</div>
           </div>
-          <div style="flex:1;min-width:180px;background:var(--card);padding:14px;border-radius:12px;box-shadow:var(--shadow)">
-            <strong>Shift</strong>
-            <div style="font-weight:800;margin-top:6px">₹2,400 / 8-hour shift</div>
-            <div style="color:var(--muted);font-size:13px;margin-top:8px">Includes short breaks</div>
+          <div style="flex:1;min-width:170px;background:var(--card);padding:16px;border-radius:12px;box-shadow:var(--shadow)">
+            <div style="font-size:20px;margin-bottom:6px">🌙</div>
+            <strong>8-hour shift</strong>
+            <div style="font-weight:800;font-size:18px;margin-top:6px">₹2,000–₹3,600</div>
+            <div style="color:var(--muted);font-size:13px;margin-top:6px">Includes short breaks</div>
           </div>
-          <div style="flex:1;min-width:180px;background:var(--card);padding:14px;border-radius:12px;box-shadow:var(--shadow)">
-            <strong>Full day</strong>
-            <div style="font-weight:800;margin-top:6px">₹4,800 / day</div>
-            <div style="color:var(--muted);font-size:13px;margin-top:8px">Discounted for recurring bookings</div>
+          <div style="flex:1;min-width:170px;background:var(--card);padding:16px;border-radius:12px;box-shadow:var(--shadow)">
+            <div style="font-size:20px;margin-bottom:6px">🗓</div>
+            <strong>Full day (12 hr)</strong>
+            <div style="font-weight:800;font-size:18px;margin-top:6px">₹3,000–₹5,400</div>
+            <div style="color:var(--muted);font-size:13px;margin-top:6px">Best value for long stays</div>
           </div>
         </div>
       </section>
 
-      <section style="margin-top:34px;background:linear-gradient(180deg,rgba(9,30,66,0.02),transparent);padding:18px;border-radius:12px">
-        <h3 style="margin:0">Safety & verification</h3>
-        <p style="color:var(--muted);margin-top:8px">Caregivers pass ID verification and a basic background check for MVP. Profiles show languages, experience and verified badges.</p>
+      <!-- ── Safety ── -->
+      <section style="margin-top:32px;background:linear-gradient(135deg,rgba(59,130,246,.04),rgba(6,182,212,.03));padding:20px;border-radius:14px">
+        <h3 style="margin:0;font-size:18px;font-weight:800">Safety & verification</h3>
+        <p style="color:var(--muted);margin-top:8px;font-size:14px">Every caregiver passes ID verification and a background check. Profiles display verified badges, languages spoken, experience, and real reviews from families.</p>
+        <a class="btn btn-primary" href="caregivers.html" style="margin-top:14px;display:inline-flex">Browse verified caregivers</a>
       </section>
-
     </main>
 
     <footer>
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
         <div>
           <strong>CareMate</strong>
-          <div style="color:var(--muted);font-size:13px">Trusted hospital companionship • © 2025 CareMate</div>
+          <div style="color:var(--muted);font-size:13px">Trusted hospital companionship · © 2026 CareMate</div>
         </div>
-        <div style="display:flex;gap:14px;align-items:center">
+        <div style="display:flex;gap:14px">
           <a href="#" style="text-decoration:none;color:var(--muted)">Privacy</a>
           <a href="#" style="text-decoration:none;color:var(--muted)">Terms</a>
           <a href="#" style="text-decoration:none;color:var(--muted)">Contact</a>
@@ -294,5 +264,25 @@
       </div>
     </footer>
   </div>
+
+  <script src="app.js"></script>
+  <script>
+    Nav.render('#nav-root', '');
+
+    // Set default date to today
+    document.getElementById('bw-date').min   = new Date().toISOString().split('T')[0];
+    document.getElementById('bw-date').value = new Date().toISOString().split('T')[0];
+
+    const AVG_RATE = 350; // avg across all caregivers
+    function updateEstimate() {
+      const dur  = parseInt(document.getElementById('bw-duration').value, 10);
+      const p    = Pricing.estimate(AVG_RATE, dur);
+      document.getElementById('bw-price').textContent = Utils.currency(p.total);
+      document.getElementById('bw-note').textContent  = `Based on avg ₹${AVG_RATE}/hr · ${dur} hr${dur > 1 ? 's' : ''} + 5% fee`;
+      const date = document.getElementById('bw-date').value;
+      document.getElementById('bw-cta').href = `caregivers.html${date ? '?date=' + date : ''}`;
+    }
+    updateEstimate();
+  </script>
 </body>
 </html>

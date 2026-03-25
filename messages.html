@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Messages — CareMate</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#chat-input">Skip to message input</a>
+  <div class="container">
+    <div id="nav-root"></div>
+
+    <main id="main">
+      <div style="padding:4px 0 16px;display:flex;align-items:center;gap:12px">
+        <a href="dashboard.html" style="color:var(--muted);text-decoration:none;font-size:22px" title="Back to dashboard">←</a>
+        <div>
+          <h1 class="page-title" style="font-size:20px" id="chat-title">Messages</h1>
+          <p class="page-desc" id="chat-sub"></p>
+        </div>
+      </div>
+
+      <div class="chat-wrap" id="chat-wrap">
+        <!-- populated by JS -->
+      </div>
+    </main>
+
+    <footer style="margin-top:16px">
+      <div class="footer-inner">
+        <div><strong>CareMate</strong> · © 2026</div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    Nav.render('#nav-root', 'messages');
+    if (!Auth.requireAuth('auth.html?next=messages.html')) throw '';
+
+    const user   = Auth.currentUser();
+    const params = new URLSearchParams(location.search);
+    let bookingId = params.get('bookingId');
+
+    // Get all user bookings for the sidebar conversation list
+    const allBookings = Bookings.getByUser(user.email).filter(b => b.status !== 'cancelled');
+
+    // If no bookingId given, pick the first booking
+    if (!bookingId && allBookings.length) bookingId = allBookings[0].id;
+
+    // Seed starter messages for demo feel
+    function seedMessages() {
+      allBookings.forEach(b => {
+        const existing = Messages.getByBooking(b.id);
+        if (existing.length) return;
+        const cg = Caregivers.get(b.caregiverId);
+        const cgName = cg ? cg.name.split(' ')[0] : 'Your caregiver';
+        Messages.send(b.id, 'caregiver', `Hi! I'm ${cgName}. I've seen your booking for ${b.hospital}. Looking forward to being there for ${b.patientName}.`);
+        Messages.send(b.id, 'family',    'Thank you! Please make sure to arrive a few minutes early.');
+        Messages.send(b.id, 'caregiver', 'Absolutely, I\'ll be there by ' + Utils.formatTime(b.startTime) + '. Is there anything specific I should know beforehand?');
+      });
+    }
+
+    function renderChat() {
+      const booking = Bookings.getAll().find(b => b.id === bookingId);
+      const cg      = booking ? Caregivers.get(booking.caregiverId) : null;
+
+      if (!booking) {
+        document.getElementById('chat-wrap').innerHTML = `
+          <div class="empty" style="padding:60px 24px">
+            <div class="icon">💬</div>
+            <h3>No conversations yet</h3>
+            <p>Your messages with caregivers will appear here after you make a booking.</p>
+            <a class="btn btn-primary" href="caregivers.html" style="margin-top:14px">Browse caregivers</a>
+          </div>`;
+        return;
+      }
+
+      document.title = (cg ? cg.name : booking.caregiverName) + ' — Messages';
+      document.getElementById('chat-title').textContent  = cg ? cg.name : booking.caregiverName;
+      document.getElementById('chat-sub').textContent    = booking.hospital + ' · ' + Utils.formatDate(booking.date + 'T12:00:00');
+
+      const avatarBg    = cg ? cg.avatarBg    : 'linear-gradient(135deg,#e6eefc,#e6fff8)';
+      const avatarColor = cg ? cg.avatarColor : '#064e3b';
+      const initials    = cg ? cg.initials    : booking.caregiverName.split(' ').map(n=>n[0]).join('').slice(0,2);
+
+      // Sidebar: all conversations
+      const sidebarItems = allBookings.map(b => {
+        const msgs   = Messages.getByBooking(b.id);
+        const last   = msgs[msgs.length - 1];
+        const active = b.id === bookingId;
+        const bcg    = Caregivers.get(b.caregiverId);
+        return `
+          <div class="chat-item${active ? ' active' : ''}" onclick="navigateTo('${b.id}')">
+            <div class="avatar" style="background:${bcg ? bcg.avatarBg : '#f1f5f9'};color:${bcg ? bcg.avatarColor : 'var(--muted)'}; width:40px;height:40px;font-size:13px;border-radius:10px">
+              ${bcg ? bcg.initials : b.caregiverName.split(' ').map(n=>n[0]).join('').slice(0,2)}
+            </div>
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:700;font-size:13px">${b.caregiverName}</div>
+              <div style="font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">
+                ${last ? last.text : 'No messages yet'}
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+
+      const msgs    = Messages.getByBooking(bookingId);
+      const bubbles = msgs.map(m => {
+        const isMine = m.senderRole === 'family';
+        const t      = Utils.formatTime(new Date(m.sentAt).toTimeString().slice(0,5));
+        return `<div class="bubble ${isMine ? 'mine' : 'theirs'}">${escapeHtml(m.text)}<div class="btime">${t}</div></div>`;
+      }).join('');
+
+      document.getElementById('chat-wrap').innerHTML = `
+        <div style="display:flex;height:100%;overflow:hidden">
+          <!-- Sidebar -->
+          <div style="width:260px;border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0" id="chat-sidebar">
+            <div style="padding:14px 16px;font-weight:700;font-size:14px;border-bottom:1px solid var(--border)">Conversations</div>
+            ${sidebarItems}
+          </div>
+          <!-- Main chat -->
+          <div style="flex:1;display:flex;flex-direction:column;min-width:0">
+            <div class="chat-header">
+              <div class="avatar" style="background:${avatarBg};color:${avatarColor};width:40px;height:40px;font-size:13px;border-radius:10px">${initials}</div>
+              <div>
+                <div style="font-weight:700;font-size:14px">${cg ? cg.name : booking.caregiverName}</div>
+                <div style="font-size:12px;color:var(--muted)">${booking.hospital} · ${Utils.formatDate(booking.date + 'T12:00:00')}</div>
+              </div>
+            </div>
+            <div class="chat-messages" id="msg-list">${bubbles || '<div style="text-align:center;color:var(--muted);font-size:13px;margin-top:20px">No messages yet. Say hello!</div>'}</div>
+            <div class="chat-input-row">
+              <textarea class="chat-input" id="chat-input" rows="1" placeholder="Type a message… (Enter to send, Shift+Enter for newline)" aria-label="Message input"></textarea>
+              <button class="btn btn-primary" onclick="sendMsg()" style="flex-shrink:0">Send</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      scrollToBottom();
+
+      document.getElementById('chat-input').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+      });
+    }
+
+    function sendMsg() {
+      const input = document.getElementById('chat-input');
+      const text  = input.value.trim();
+      if (!text) return;
+      input.value = '';
+      input.style.height = '';
+
+      Messages.send(bookingId, 'family', text);
+
+      // Append bubble immediately
+      const list = document.getElementById('msg-list');
+      const t    = Utils.formatTime(new Date().toTimeString().slice(0,5));
+      const div  = document.createElement('div');
+      div.className = 'bubble mine';
+      div.innerHTML = escapeHtml(text) + `<div class="btime">${t}</div>`;
+      // Remove "no messages" placeholder if present
+      list.querySelectorAll('div[style]').forEach(el => { if (el.textContent.includes('No messages')) el.remove(); });
+      list.appendChild(div);
+      scrollToBottom();
+
+      // Typing indicator
+      const typing = document.createElement('div');
+      typing.className = 'bubble theirs';
+      typing.textContent = '…';
+      typing.id = 'typing-indicator';
+      list.appendChild(typing);
+      scrollToBottom();
+
+      Messages.simulateReply(bookingId, (msg) => {
+        document.getElementById('typing-indicator')?.remove();
+        const reply = document.createElement('div');
+        reply.className = 'bubble theirs';
+        reply.innerHTML = escapeHtml(msg.text) + `<div class="btime">${Utils.formatTime(new Date(msg.sentAt).toTimeString().slice(0,5))}</div>`;
+        list.appendChild(reply);
+        scrollToBottom();
+      });
+    }
+
+    function scrollToBottom() {
+      const el = document.getElementById('msg-list');
+      if (el) el.scrollTop = el.scrollHeight;
+    }
+
+    function navigateTo(id) {
+      bookingId = id;
+      renderChat();
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    seedMessages();
+    renderChat();
+  </script>
+</body>
+</html>

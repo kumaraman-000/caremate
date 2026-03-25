@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Browse Caregivers — CareMate</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <div class="container">
+    <div id="nav-root"></div>
+
+    <main id="main">
+      <div style="padding:20px 0 4px">
+        <h1 class="page-title">Browse Caregivers</h1>
+        <p class="page-desc">Find verified, experienced caregivers near your hospital.</p>
+      </div>
+
+      <!-- Search + sort bar -->
+      <div class="search-bar" style="margin-top:16px">
+        <input class="form-control" type="search" id="q" placeholder="Search by name, skill, language, city…" oninput="render()">
+        <select class="form-control" id="sort" onchange="render()" style="width:auto">
+          <option value="rating">Top rated</option>
+          <option value="price_asc">Price: Low → High</option>
+          <option value="price_desc">Price: High → Low</option>
+          <option value="experience">Most experienced</option>
+        </select>
+      </div>
+
+      <div class="browse-layout">
+        <!-- Filters sidebar -->
+        <aside class="filters">
+          <h3>Filters</h3>
+          <div class="filter-group">
+            <label>Language</label>
+            <select class="form-control" id="f-lang" onchange="render()">
+              <option value="">All languages</option>
+              <option>Hindi</option><option>English</option><option>Tamil</option>
+              <option>Telugu</option><option>Kannada</option><option>Malayalam</option>
+              <option>Gujarati</option><option>Punjabi</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Minimum rating</label>
+            <select class="form-control" id="f-rating" onchange="render()">
+              <option value="0">Any rating</option>
+              <option value="4.5">4.5★ and above</option>
+              <option value="4.7">4.7★ and above</option>
+              <option value="4.9">4.9★ and above</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted)">
+              <input type="checkbox" id="f-avail" onchange="render()"> Available now only
+            </label>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="clearFilters()" style="width:100%;margin-top:6px">Clear all</button>
+        </aside>
+
+        <!-- Results -->
+        <section>
+          <div id="result-count" style="font-size:13px;color:var(--muted);margin-bottom:12px"></div>
+          <div class="card-grid" id="grid" role="list"></div>
+          <div class="empty" id="no-results" style="display:none">
+            <div class="icon">🔍</div>
+            <h3>No caregivers found</h3>
+            <p>Try adjusting your search or filters.</p>
+            <button class="btn btn-ghost" style="margin-top:12px" onclick="clearFilters()">Clear filters</button>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <div><strong>CareMate</strong> · Trusted hospital companionship · © 2026</div>
+        <div style="display:flex;gap:16px"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a></div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    Nav.render('#nav-root', 'caregivers');
+
+    // Pre-fill from index.html quick-book query params
+    const p = new URLSearchParams(location.search);
+    if (p.get('date')) { /* could pre-fill a date filter if needed */ }
+
+    function getFilters() {
+      return {
+        query:         document.getElementById('q').value,
+        language:      document.getElementById('f-lang').value,
+        minRating:     document.getElementById('f-rating').value,
+        availableOnly: document.getElementById('f-avail').checked,
+        sortBy:        document.getElementById('sort').value,
+      };
+    }
+
+    function clearFilters() {
+      document.getElementById('q').value       = '';
+      document.getElementById('f-lang').value  = '';
+      document.getElementById('f-rating').value= '0';
+      document.getElementById('f-avail').checked = false;
+      document.getElementById('sort').value    = 'rating';
+      render();
+    }
+
+    function render() {
+      const list   = Caregivers.search(getFilters());
+      const grid   = document.getElementById('grid');
+      const empty  = document.getElementById('no-results');
+      const count  = document.getElementById('result-count');
+
+      count.textContent = list.length + ' caregiver' + (list.length !== 1 ? 's' : '') + ' found';
+
+      if (!list.length) { grid.innerHTML = ''; empty.style.display = 'block'; return; }
+      empty.style.display = 'none';
+
+      grid.innerHTML = list.map(cg => `
+        <article class="card cg-card" role="listitem">
+          <div class="cg-meta">
+            <div class="avatar" style="background:${cg.avatarBg};color:${cg.avatarColor}">${cg.initials}</div>
+            <div>
+              <div class="cg-name">${cg.name}</div>
+              <div class="cg-sub">${cg.experience} yr${cg.experience !== 1 ? 's' : ''} exp · ${cg.languages.join(', ')}</div>
+              <div style="margin-top:5px"><span class="avail ${cg.available ? 'yes' : 'no'}">${cg.available ? 'Available' : 'Unavailable'}</span></div>
+            </div>
+          </div>
+          <div class="cg-skills">
+            ${cg.skills.map(s => `<span class="tag">${s}</span>`).join('')}
+          </div>
+          <div class="cg-footer">
+            <div class="rating">★ ${cg.rating} <span class="cnt">(${cg.reviews})</span></div>
+            <div style="font-weight:800;font-size:15px">${Utils.currency(cg.ratePerHour)}<span style="font-size:12px;font-weight:500;color:var(--muted)">/hr</span></div>
+          </div>
+          <div class="cg-actions">
+            <a class="btn btn-primary" style="flex:1" href="caregiver.html?id=${cg.id}">View profile & Book</a>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    render();
+  </script>
+</body>
+</html>

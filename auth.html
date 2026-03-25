@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in — CareMate</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="auth-wrap">
+    <div class="auth-card">
+
+      <div class="auth-logo">
+        <div class="logo">CM</div>
+        <div>
+          <div class="brand-name">CareMate</div>
+          <div class="brand-sub">Hospital Caregiver Booking</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" id="tab-login-btn" onclick="switchTab('login')">Sign in</button>
+        <button class="tab-btn"        id="tab-reg-btn"   onclick="switchTab('register')">Create account</button>
+      </div>
+
+      <!-- ── Login ── -->
+      <div class="tab-panel active" id="panel-login">
+        <p style="color:var(--muted);font-size:14px;margin-bottom:20px">Welcome back — sign in to manage your bookings.</p>
+        <form id="login-form" onsubmit="handleLogin(event)" novalidate>
+          <div class="form-group">
+            <label for="l-email">Email address</label>
+            <input class="form-control" type="email" id="l-email" placeholder="you@example.com" autocomplete="email">
+            <div class="form-error" id="l-email-err">Please enter a valid email.</div>
+          </div>
+          <div class="form-group">
+            <label for="l-pass">Password</label>
+            <input class="form-control" type="password" id="l-pass" placeholder="••••••••" autocomplete="current-password">
+            <div class="form-error" id="l-pass-err">Please enter your password.</div>
+          </div>
+          <div class="form-error" id="l-general-err" style="margin-bottom:12px"></div>
+          <button class="btn btn-primary btn-lg" type="submit" id="login-btn">Sign in</button>
+        </form>
+        <p style="text-align:center;margin-top:16px;font-size:13px;color:var(--muted)">
+          Don't have an account? <a href="#" onclick="switchTab('register')">Create one</a>
+        </p>
+      </div>
+
+      <!-- ── Register ── -->
+      <div class="tab-panel" id="panel-register">
+        <p style="color:var(--muted);font-size:14px;margin-bottom:20px">Join CareMate — book trusted hospital caregivers today.</p>
+        <form id="reg-form" onsubmit="handleRegister(event)" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="r-fname">First name</label>
+              <input class="form-control" type="text" id="r-fname" placeholder="Aisha" autocomplete="given-name">
+              <div class="form-error" id="r-fname-err">Required.</div>
+            </div>
+            <div class="form-group">
+              <label for="r-lname">Last name</label>
+              <input class="form-control" type="text" id="r-lname" placeholder="Khan" autocomplete="family-name">
+              <div class="form-error" id="r-lname-err">Required.</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="r-email">Email address</label>
+            <input class="form-control" type="email" id="r-email" placeholder="you@example.com" autocomplete="email">
+            <div class="form-error" id="r-email-err">Please enter a valid email.</div>
+          </div>
+          <div class="form-group">
+            <label for="r-phone">Phone number</label>
+            <input class="form-control" type="tel" id="r-phone" placeholder="+91 98765 43210" autocomplete="tel">
+          </div>
+          <div class="form-group">
+            <label for="r-pass">Password</label>
+            <input class="form-control" type="password" id="r-pass" placeholder="Min. 8 characters" autocomplete="new-password">
+            <div class="form-error" id="r-pass-err">Password must be at least 8 characters.</div>
+          </div>
+          <div class="form-group">
+            <label for="r-pass2">Confirm password</label>
+            <input class="form-control" type="password" id="r-pass2" placeholder="Re-enter password" autocomplete="new-password">
+            <div class="form-error" id="r-pass2-err">Passwords do not match.</div>
+          </div>
+          <div class="form-error" id="r-general-err" style="margin-bottom:12px"></div>
+          <button class="btn btn-primary btn-lg" type="submit" id="reg-btn">Create account</button>
+        </form>
+        <p style="text-align:center;margin-top:16px;font-size:13px;color:var(--muted)">
+          Already have an account? <a href="#" onclick="switchTab('login')">Sign in</a>
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // If already signed in, skip to destination
+    const params = new URLSearchParams(location.search);
+    const nextUrl = params.get('next') || 'dashboard.html';
+    if (Auth.currentUser()) window.location.href = nextUrl;
+
+    // Pre-select tab from query param
+    if (params.get('tab') === 'register') switchTab('register');
+
+    function switchTab(tab) {
+      const isLogin = tab === 'login';
+      document.getElementById('tab-login-btn').classList.toggle('active', isLogin);
+      document.getElementById('tab-reg-btn').classList.toggle('active', !isLogin);
+      document.getElementById('panel-login').classList.toggle('active', isLogin);
+      document.getElementById('panel-register').classList.toggle('active', !isLogin);
+    }
+
+    function setErr(id, msg) {
+      const el = document.getElementById(id);
+      el.textContent = msg || el.dataset.default || el.textContent;
+      el.classList.toggle('show', !!msg);
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('l-email').value.trim();
+      const pass  = document.getElementById('l-pass').value;
+      let ok = true;
+
+      if (!email || !/\S+@\S+\.\S+/.test(email)) { setErr('l-email-err','Please enter a valid email.'); ok = false; } else setErr('l-email-err','');
+      if (!pass) { setErr('l-pass-err','Please enter your password.'); ok = false; } else setErr('l-pass-err','');
+      if (!ok) return;
+
+      const btn = document.getElementById('login-btn');
+      btn.innerHTML = '<span class="spinner"></span> Signing in…'; btn.disabled = true;
+      setTimeout(() => {
+        // Demo: any email/password works
+        Auth.login(email.split('@')[0].replace(/[^a-zA-Z ]/g,' ').trim() || 'User', email);
+        Toast.show('Welcome back!', 'success');
+        window.location.href = nextUrl;
+      }, 800);
+    }
+
+    function handleRegister(e) {
+      e.preventDefault();
+      const fname = document.getElementById('r-fname').value.trim();
+      const lname = document.getElementById('r-lname').value.trim();
+      const email = document.getElementById('r-email').value.trim();
+      const pass  = document.getElementById('r-pass').value;
+      const pass2 = document.getElementById('r-pass2').value;
+      let ok = true;
+
+      if (!fname) { setErr('r-fname-err','Required.'); ok = false; } else setErr('r-fname-err','');
+      if (!lname) { setErr('r-lname-err','Required.'); ok = false; } else setErr('r-lname-err','');
+      if (!email || !/\S+@\S+\.\S+/.test(email)) { setErr('r-email-err','Please enter a valid email.'); ok = false; } else setErr('r-email-err','');
+      if (pass.length < 8) { setErr('r-pass-err','Password must be at least 8 characters.'); ok = false; } else setErr('r-pass-err','');
+      if (pass !== pass2) { setErr('r-pass2-err','Passwords do not match.'); ok = false; } else setErr('r-pass2-err','');
+      if (!ok) return;
+
+      const btn = document.getElementById('reg-btn');
+      btn.innerHTML = '<span class="spinner"></span> Creating account…'; btn.disabled = true;
+      setTimeout(() => {
+        Auth.login(fname + ' ' + lname, email);
+        Toast.show('Account created! Welcome to CareMate.', 'success');
+        window.location.href = nextUrl;
+      }, 900);
+    }
+  </script>
+</body>
+</html>
